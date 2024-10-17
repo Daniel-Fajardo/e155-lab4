@@ -2,6 +2,14 @@
 // Fur Elise, E155 Lab 4
 // Updated Fall 2024
 
+#include "STM32L432KC_RCC.h"
+#include "STM32L432KC_GPIO.h"
+#include "STM32L432KC_FLASH.h"
+#include "STM32L432KC_TIM.h"
+
+
+#define LED_PIN 6
+
 // Pitch in Hz, duration in ms
 const int notes[][2] = {
 {659,	125},
@@ -115,6 +123,16 @@ const int notes[][2] = {
 {  0,	0}};
 
 int main(void) {
-	
-	
+    // Turn on clock to GPIOB
+    RCC->AHB2ENR |= (1 << 1);
+    GPIO->MODER &= ~(0b11<<12);// set GPIO A6 bits to alternate function mode 14 (datasheet)
+    GPIO->MODER |= (0b10);
+
+	for (int i = 0; i < sizeof(notes)/2; i++) {
+        int freq = notes[i][0];
+        int dur = notes[i][1];
+        setfreq(freq, clk); // set the frequency for the note
+        setdur(dur, clk); // play the note for the given duration
+    }
+
 }
