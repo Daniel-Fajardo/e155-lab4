@@ -1,6 +1,9 @@
-// lab4_starter.c
-// Fur Elise, E155 Lab 4
-// Updated Fall 2024
+// Daniel Fajardo
+// dfajardo@g.hmc.edu
+// 10/06/2024
+// 
+// main script for lab4
+
 
 #include "STM32L432KC_RCC.h"
 #include "STM32L432KC_GPIO.h"
@@ -8,7 +11,7 @@
 #include "STM32L432KC_TIM.h"
 
 
-#define LED_PIN 6
+#define PIN 6
 
 // Pitch in Hz, duration in ms
 const int notes[][2] = {
@@ -123,16 +126,21 @@ const int notes[][2] = {
 {  0,	0}};
 
 int main(void) {
-    // Turn on clock to GPIOB
-    RCC->AHB2ENR |= (1 << 1);
-    GPIO->MODER &= ~(0b11<<12);// set GPIO A6 bits to alternate function mode 14 (datasheet)
-    GPIO->MODER |= (0b10);
+    configureClock(); // configure clock
+    configureTIM(); // configure TIM
 
+    RCC->AHB2ENR |= (1<<1); // Turn on clock to GPIOA
+    RCC->APB2ENR |= (1<<16); // enable TIM15
+    RCC->APB2ENR |= (1<<17); // enable TIM16
+/*    GPIO->MODER &= ~(0b11<<12); // 
+    GPIO->MODER |= (0b10<<12); // set GPIO A6 bits to alternate function mode 14 (datasheet)*/
+    pinMode(PIN, GPIO_ALT); // set GPIO A6 to alt function
+    volatile int clk;
 	for (int i = 0; i < sizeof(notes)/2; i++) {
-        int freq = notes[i][0];
-        int dur = notes[i][1];
-        setfreq(freq, clk); // set the frequency for the note
-        setdur(dur, clk); // play the note for the given duration
+          int freq = notes[i][0];
+          int dur = notes[i][1];
+          setfreq(freq, TIM16); // set the frequency for the note
+          setdur(dur, TIM15); // play the note for the given duration
     }
 
 }

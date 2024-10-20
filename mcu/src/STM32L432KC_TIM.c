@@ -6,6 +6,7 @@
 
 #include "STM32L432KC_TIM.h"
 #include <math.h>
+#include <stdint.h>
 void configureTIM(void){
     //set ccmr1 to pwm mode
     TIM16->CCMR1 &= ~(0b111<<4); // OC1M bits [2:0] cleared
@@ -22,13 +23,13 @@ void configureTIM(void){
     TIM16->BDTR |= (1<<15); // enabled MOE (main output enable)
 };
 
-void setfreq(int freq, int clk){
+void setfreq(int freq, TIMxx_TypeDef *TIMx){
     /*Find duration of period for input frequency*/
     if (freq==0){
         TIM16->CR1 &= ~(1<<0); // CEN disabled
     }
     else {
-        int newARR = (clk/(TIM16->PSC+1)/freq)-1;
+        int newARR = (80000000/(TIM16->PSC+1)/freq)-1; // might need to replace with manual input
         TIM16->ARR &= ~(65536<<0); // auto-reload register bits cleared
         TIM16->ARR |= (newARR<<0); // ARR bits set to desired period length
         int dutycycle = newARR/2; // duty cycle set to 50%
@@ -38,9 +39,11 @@ void setfreq(int freq, int clk){
     }
 };
 
-void setdur(int dur, int clk){
-    int ticks = clk/(TIM16->PSC+1)/1000*dur; // calculated ticks
-    TIM16->CNT = 0; // reset counter to 0 before while loop
-    while (TIM16->CNT < ticks); // waits until counter reaches tick count
+void setdur(int dur, TIMxx_TypeDef *TIMx){
+    
+    int ticks = 80000000/(TIM15->PSC+1)/1000*dur; // calculated ticks per ms
+    TIM15->CNT = 0; // reset counter to 0 before while loop
+    TIM15->SR &= ~(1<<0); // wait for flag to be raised marking overflow in CNT
+    while ((TIM15->SR & (1<<0))); // waits until counter reaches tick count
 
 };

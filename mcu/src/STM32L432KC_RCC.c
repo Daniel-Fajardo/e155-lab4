@@ -18,23 +18,23 @@ void configurePLL() {
 
     // Load configuration
     // TODO: Set PLL SRC to MSI
-    RCC->CFGR &= ~(0b11<<0); // PLLSRC bits cleared
-    RCC->CFGR |= (0b01<<0); // PLLSRC bits set to 01, SRC=MSI
+    RCC->PLLCFGR &= ~(0b11<<0); // PLLSRC bits cleared
+    RCC->PLLCFGR |= (0b01<<0); // PLLSRC bits set to 01, SRC=MSI
 
     // TODO: Set PLLN
-    RCC->CFGR &= ~(0b1111111<<8); // PLLN bits cleared
-    RCC->CFGR |= (0b1010000<<8); // PLLN bits set to 80
+    RCC->PLLCFGR &= ~(0b1111111<<8); // PLLN bits cleared
+    RCC->PLLCFGR |= (0b1010000<<8); // PLLN bits set to 80
 
     // TODO: Set PLLM
-    RCC->CFGR &= ~(0b111<<4); // PLLM bits cleared
-    RCC->CFGR |= (0b000<<4); // PLLM bits set to 000, M=1
+    RCC->PLLCFGR &= ~(0b111<<4); // PLLM bits cleared
+    RCC->PLLCFGR |= (0b000<<4); // PLLM bits set to 000, M=1
     
     // TODO: Set PLLR
-    RCC->CFGR &= ~(0b11<<25); // PLLR bits cleared
-    RCC->CFGR |= (0b01<<25); // PLLR bits set to 01, R=4
+    RCC->PLLCFGR &= ~(0b11<<25); // PLLR bits cleared
+    RCC->PLLCFGR |= (0b01<<25); // PLLR bits set to 01, R=4
     
     // TODO: Enable PLLR output
-    RCC->CFGR |= (1<<24); // PLLREN bit set to 1
+    RCC->PLLCFGR |= (1<<24); // PLLREN bit set to 1
     
     // TODO: Enable PLL
     RCC->CR |= (1<<24); // PLLON set to 1

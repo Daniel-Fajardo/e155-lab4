@@ -4,9 +4,8 @@
 // 
 // headerfile for pwm pins
 
-#include "STM32L432KC_RCC.c"
-#include "STM32L432KC_GPIO.c"
-#include "STM32L432KC_FLASH.c"
+#ifndef STM32L4_TIM_H
+#define STM32L4_TIM_H
 
 #include <stdint.h>
 
@@ -14,7 +13,8 @@
 // Definitions
 ///////////////////////////////////////////////////////////////////////////////
 
-// Base address for TIM16
+// Base addresses
+#define TIM15_BASE (0x40014000)
 #define TIM16_BASE (0x40014400)
 
 // TIM16 register structs
@@ -44,9 +44,10 @@ typedef struct{
 
     
     volatile uint32_t OR2; // TIMx_OR2 offset 0x60
-} TIM16_TypeDef;
+} TIMxx_TypeDef;
 
-#define TIM16 ((TIM16_TypeDef *) TIM16_BASE)
+#define TIM15 ((TIMxx_TypeDef *) TIM15_BASE)
+#define TIM16 ((TIMxx_TypeDef *) TIM16_BASE)
 
 ///////////////////////////////////////////////////////////////////////////////
 // Function prototypes
@@ -54,6 +55,8 @@ typedef struct{
 
 void configureTIM(void);
 
-void setfreq(int freq);
+void setfreq(int freq, TIMxx_TypeDef *TIMx);
 
-void setdur(int dur);
+void setdur(int dur, TIMxx_TypeDef *TIMx);
+
+#endif
