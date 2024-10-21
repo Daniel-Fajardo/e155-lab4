@@ -58,4 +58,5 @@ void digitalWrite(int pin, int val);
 
 void togglePin(int pin);
 
+void afMode(int pin, int mode);
 #endif

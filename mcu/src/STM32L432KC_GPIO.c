@@ -34,3 +34,9 @@ void togglePin(int pin) {
     // Use XOR to toggle
     GPIO->ODR ^= (1 << pin);
 }
+
+void afMode(int pin, int mode) {
+    GPIO->AFRL &= ~(0b1111<<4*pin);
+    GPIO->AFRL |= (mode<<4*pin);
+
+}

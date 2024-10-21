@@ -126,21 +126,25 @@ const int notes[][2] = {
 {  0,	0}};
 
 int main(void) {
+    configureFlash();
     configureClock(); // configure clock
-    configureTIM(); // configure TIM
-
-    RCC->AHB2ENR |= (1<<1); // Turn on clock to GPIOA
+    RCC->AHB2ENR |= (1<<0); // Turn on clock to GPIOA
     RCC->APB2ENR |= (1<<16); // enable TIM15
     RCC->APB2ENR |= (1<<17); // enable TIM16
-/*    GPIO->MODER &= ~(0b11<<12); // 
-    GPIO->MODER |= (0b10<<12); // set GPIO A6 bits to alternate function mode 14 (datasheet)*/
+
+    configureTIM(TIM15); // configure TIM15
+    configureTIM(TIM16); // configure TIM16
+  
+
     pinMode(PIN, GPIO_ALT); // set GPIO A6 to alt function
-    volatile int clk;
-	for (int i = 0; i < sizeof(notes)/2; i++) {
+    afMode(PIN, 0b1110); // set pin A6 to alt function 14
+    while (1) {	
+        for (int i = 0; i < sizeof(notes)/2; i++) {
           int freq = notes[i][0];
           int dur = notes[i][1];
           setfreq(freq, TIM16); // set the frequency for the note
           setdur(dur, TIM15); // play the note for the given duration
+        }
     }
 
 }

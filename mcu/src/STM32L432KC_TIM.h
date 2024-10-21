@@ -53,7 +53,7 @@ typedef struct{
 // Function prototypes
 ///////////////////////////////////////////////////////////////////////////////
 
-void configureTIM(void);
+void configureTIM(TIMxx_TypeDef *TIMx);
 
 void setfreq(int freq, TIMxx_TypeDef *TIMx);
 
